@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
+import { getDeviceCode } from '../helper/local-storage';
 
 class Home extends Component {
     constructor(props) {
@@ -9,6 +10,8 @@ class Home extends Component {
         }
     }
     onClose = () => {
+        var device_code= getDeviceCode();
+
         if (this.state.statusLogin === 0) {
             return;
         }
@@ -19,7 +22,7 @@ class Home extends Component {
         axios({
             method: 'GET',
             url: 'http://a.vipn.net/api/auth/logout',
-            headers: { "DEVICE-CODE": this.props.device_code }
+            headers: { "DEVICE-CODE": device_code }
         }).then(res => {
             if (res.data.code === 200) {
                 alert("Đăng xuất thành công");
@@ -27,6 +30,8 @@ class Home extends Component {
                     statusLogin: -1
                 });
                 localStorage.removeItem('name');
+                localStorage.removeItem('time');
+                localStorage.removeItem('token');
             }
             else {
                 alert(res.data.msg);
